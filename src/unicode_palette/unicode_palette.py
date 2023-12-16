@@ -59,7 +59,7 @@ def _create_arg_parser() -> argparse.ArgumentParser:
         "--font-family",
         type=str,
         help="Font family to use in HTML",
-        default="Noto Color Emoji,emoji",
+        default='"Noto Color Emoji", emoji',
     )
     return result
 
@@ -98,9 +98,9 @@ def _write_output(args: argparse.Namespace, out: TextIO):
             "<!DOCTYPE html><html><head><title>Unicode Palette</title><style> .n {font-size: "
             + args.name_font_size
             + ";}\n"
-            + "body {font-family: '"
+            + "body {font-family: "
             + args.font_family
-            + "';}"
+            + ";}"
             + " </style></head><body>"
             + "".join(
                 [
