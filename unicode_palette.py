@@ -4,7 +4,7 @@
 import argparse
 import base64
 import sys
-from typing import FrozenSet, Generator
+from typing import FrozenSet, Generator, Optional, TextIO, Tuple
 import unicodedata
 import urllib.parse
 
@@ -27,13 +27,7 @@ def _create_arg_parser() -> argparse.ArgumentParser:
         default=False,
         action=argparse.BooleanOptionalAction,
     )
-    result.add_argument(
-        "--add-combining",
-        type=bool,
-        help="Add combining class to HTML output",
-        default=False,
-        action=argparse.BooleanOptionalAction,
-    )
+
     result.add_argument(
         "--base64",
         type=bool,
@@ -61,54 +55,58 @@ UNICODE_END = 0x10FFFF
 UNICODE_ZWS = "\u200B"
 
 
-def _char_gen(categories: FrozenSet[str]) -> Generator[str, None, None]:
+def _char_gen(
+    args: argparse.Namespace,
+) -> Generator[Tuple[str, Optional[str]], None, None]:
+    categories = frozenset(args.category)
     for code in range(UNICODE_END):
         u = chr(code)
         if unicodedata.category(u) in categories:
-            yield u
+            yield (
+                u,
+                unicodedata.name(u).title() if args.add_name else None,
+            )
 
 
-def _main():
-    arg_parser = _create_arg_parser()
-    args = arg_parser.parse_args()
+def _html_string(t: Tuple[str, Optional[str], Optional[str]]) -> str:
+    return t[0] + "".join(
+        [
+            f"<span class='{i}'>{t[i]}</span>"
+            for i in range(1, len(t))
+            if t[i] is not None
+        ]
+    )
 
+
+def _text_string(t: Tuple[str, Optional[str], Optional[str]]) -> str:
+    return " ".join([s for s in t if s is not None])
+
+
+def _write_output(args: argparse.Namespace, out: TextIO):
     if args.html:
-        sys.stdout.write("data:text/html;charset=UTF-8;")
-        html_fragment = "".join(
-            [
-                char
-                + UNICODE_ZWS
-                + (
-                    f"<span>{unicodedata.name(char).title()} {unicodedata.combining(char)if args.add_combining else ''}</span>"
-                    if args.add_name
-                    else ""
-                )
-                for char in _char_gen(frozenset(args.category))
-            ]
-        )
-        out = (
+        out.write("data:text/html;charset=UTF-8;")
+        out_str = (
             "<html><head><title>Unicode Palette</title><style> span {font-size:"
             + args.name_font_size
             + ";} </style></head><body>"
-            + html_fragment
+            + "".join([_html_string(t) for t in _char_gen(args)])
             + "</body></html>"
         )
     else:
-        sys.stdout.write("data:text/plain;charset=UTF-8;")
-        out = "".join(
-            [
-                char
-                + UNICODE_ZWS
-                + (unicodedata.name(char).title() if args.add_name else "")
-                for char in _char_gen(frozenset(args.category))
-            ]
-        )
+        out.write("data:text/plain;charset=UTF-8;")
+        out_str = "".join([_text_string(t) for t in _char_gen(args)])
     if args.base64:
-        sys.stdout.write("base64,")
-        b = base64.b64encode(out.encode("utf-8"))
-        sys.stdout.write(b.decode("ascii"))
+        out.write("base64,")
+        b = base64.b64encode(out_str.encode("utf-8"))
+        out.write(b.decode("ascii"))
     else:
-        sys.stdout.write(urllib.parse.quote_plus(out))
+        out.write(urllib.parse.quote_plus(out_str))
+
+
+def _main() -> None:
+    arg_parser = _create_arg_parser()
+    args = arg_parser.parse_args()
+    _write_output(args, sys.stdout)
 
 
 if __name__ == "__main__":
