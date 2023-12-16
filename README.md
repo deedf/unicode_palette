@@ -10,6 +10,16 @@ This program generates a data: URL containing a palette of Unicode symbols that 
 
 This URL can then be opened in your browser and/or bookmarked in order to always have a visual reference handy.
 
+## Installation
+
+* Install [pipx](https://pipx.pypa.io/stable/installation/)
+
+```sh
+pipx install git+https://github.com/deedf/unicode_palette
+```
+
+## Usage
+
 ```sh
 usage: unicode_palette [-h] [--add-name | --no-add-name] [--add-hover | --no-add-hover] [--html | --no-html] [--base64 | --no-base64]
                        [--category [CATEGORY ...]] [--name-font-size NAME_FONT_SIZE] [--font-family FONT_FAMILY]
