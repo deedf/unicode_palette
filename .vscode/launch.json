@@ -8,11 +8,12 @@
             "name": "unicode_palette.py",
             "type": "python",
             "request": "launch",
-            "program": "unicode_palette.py",
+            "program": "${workspaceFolder}/src/unicode_palette/unicode_palette.py",
             "console": "integratedTerminal",
             "justMyCode": true,
             "args": [
-                "--base64=False"
+                "--no-base64",
+                "--html",
             ]
         }
     ]

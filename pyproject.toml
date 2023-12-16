@@ -1,0 +1,10 @@
+[project]
+name = "unicode_palette"
+version = "2023.12.16"
+description = "Unicode character palettte as a data: URL."
+
+[project.scripts]
+unicode_palette = "unicode_palette.unicode_palette:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]

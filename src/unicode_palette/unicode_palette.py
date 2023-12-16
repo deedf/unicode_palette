@@ -55,6 +55,12 @@ def _create_arg_parser() -> argparse.ArgumentParser:
         help="Font size for character name in HTML",
         default="6",
     )
+    result.add_argument(
+        "--font-family",
+        type=str,
+        help="Font family to use in HTML",
+        default="Noto Color Emoji,emoji",
+    )
     return result
 
 
@@ -89,9 +95,13 @@ def _write_output(args: argparse.Namespace, out: TextIO):
     if args.html:
         out.write("data:text/html;charset=UTF-8;")
         out_str = (
-            "<html><head><title>Unicode Palette</title><style> .n {font-size:"
+            "<!DOCTYPE html><html><head><title>Unicode Palette</title><style> .n {font-size: "
             + args.name_font_size
-            + ";} </style></head><body>"
+            + ";}\n"
+            + "body {font-family: '"
+            + args.font_family
+            + "';}"
+            + " </style></head><body>"
             + "".join(
                 [
                     _html_string(t, args.add_name, args.add_hover)
@@ -113,11 +123,11 @@ def _write_output(args: argparse.Namespace, out: TextIO):
         out.write(urllib.parse.quote_plus(out_str))
 
 
-def _main() -> None:
+def main() -> None:
     arg_parser = _create_arg_parser()
     args = arg_parser.parse_args()
     _write_output(args, sys.stdout)
 
 
 if __name__ == "__main__":
-    _main()
+    main()
