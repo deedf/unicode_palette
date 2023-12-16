@@ -82,7 +82,7 @@ def _html_string(t: Tuple[str, str], add_name: bool, add_hover: bool) -> str:
 
 
 def _text_string(t: Tuple[str, str], add_name: bool) -> str:
-    return t[0] + (UNICODE_ZWS + t[1]) if add_name else ""
+    return t[0] + ((UNICODE_ZWS + t[1]) if add_name else "")
 
 
 def _write_output(args: argparse.Namespace, out: TextIO):
