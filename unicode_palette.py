@@ -4,7 +4,7 @@
 import argparse
 import base64
 import sys
-from typing import FrozenSet, Generator, Optional, TextIO, Tuple
+from typing import Generator, Optional, TextIO, Tuple
 import unicodedata
 import urllib.parse
 
@@ -68,7 +68,7 @@ def _char_gen(
             )
 
 
-def _html_string(t: Tuple[str, Optional[str], Optional[str]]) -> str:
+def _html_string(t: Tuple[str, Optional[str]]) -> str:
     return t[0] + "".join(
         [
             f"<span class='{i}'>{t[i]}</span>"
@@ -78,7 +78,7 @@ def _html_string(t: Tuple[str, Optional[str], Optional[str]]) -> str:
     )
 
 
-def _text_string(t: Tuple[str, Optional[str], Optional[str]]) -> str:
+def _text_string(t: Tuple[str, Optional[str]]) -> str:
     return " ".join([s for s in t if s is not None])
 
 
