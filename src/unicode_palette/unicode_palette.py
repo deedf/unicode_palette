@@ -95,7 +95,8 @@ def _write_output(args: argparse.Namespace, out: TextIO):
     if args.html:
         out.write("data:text/html;charset=UTF-8;")
         out_str = (
-            "<!DOCTYPE html><html><head><title>Unicode Palette</title><style> .n {font-size: "
+            "<!DOCTYPE html><html><head><title>Unicode Palette</title><style>"
+            + " .n {font-size: "
             + args.name_font_size
             + ";}\n"
             + "body {font-family: "
