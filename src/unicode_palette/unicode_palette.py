@@ -53,7 +53,7 @@ def _create_arg_parser() -> argparse.ArgumentParser:
         "--name-font-size",
         type=str,
         help="Font size for character name in HTML",
-        default="6",
+        default="xx-small",
     )
     result.add_argument(
         "--font-family",
@@ -101,6 +101,7 @@ def _write_output(args: argparse.Namespace, out: TextIO):
             + ";}\n"
             + "body {font-family: "
             + args.font_family
+            + "; font-size: xxx-large "
             + ";}"
             + " </style></head><body>"
             + "".join(
