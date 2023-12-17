@@ -1,6 +1,6 @@
 [project]
 name = "unicode_palette"
-version = "2023.12.16"
+version = "2023.12.17"
 description = "Unicode character palettte as a data: URL."
 
 [project.scripts]
